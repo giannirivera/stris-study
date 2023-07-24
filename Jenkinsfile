@@ -37,22 +37,13 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        // Build the Docker image
-        sh 'docker build -t stris--study-app .'
+            // Clone your Git repository to Jenkins workspace
+            checkout scm
 
-        // Push the Docker image to a container registry (e.g., Azure Container Registry)
-
-        //format is
-
-        //sh 'docker tag my-app <your-container-registry>/my-app:latest'
-        //sh 'docker login -u <your-registry-username> -p <your-registry-password> <your-container-registry>'
-        //sh 'docker push <your-container-registry>/my-app:latest'
-
-        // Deploy the image to AKS
-     
-        // format is : sh 'kubectl apply -f deployment.yaml -n <your-kubernetes-namespace>'
-        // format is sh 'kubectl set image deployment/<your-deployment-name> <your-container-registry>/my-app:latest -n <your-kubernetes-namespace>'
-      }
+            // Build the Docker image
+            script {
+                docker.build("docker.io/giannirivera/my-app:latest")
+            }
     }
   }
 
