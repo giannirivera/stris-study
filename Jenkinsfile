@@ -1,14 +1,35 @@
 pipeline {
-  agent  {
-    docker {
-            // Specify the Docker image to use for the Jenkins agent
-            label 'jenkins-agent'
-            image 'my-custom-jenkins-agent:latest' // Replace with your custom image or use 'node:14' for a Node.js image
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker-in-Docker support
-        }
-  }
+  agent none {
+    
 
   stages {
+    stage('Build Custom Jenkins Agent Image') {
+            agent {
+                docker {
+                    // Use the Docker image that has the Docker CLI installed
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker-in-Docker support
+                }
+            }
+            steps {
+                script {
+                    // Build the custom Jenkins agent Docker image
+                    docker.build('my-custom-jenkins-agent:latest', '-f Dockerfile.jenkins-agent .')
+                }
+            }
+        }
+    stage('Run Jenkins Pipeline with Custom Agent') {
+            agent {
+                docker {
+                    // Specify the Docker image to use for the Jenkins agent
+                    label 'jenkins-agent'
+                    image 'node:14:latest' // Replace with your custom image or use 'node:14' for a Node.js image
+                    args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker-in-Docker support
+                }
+            }
+
+        }
+    
     stage('Checkout') {
       steps {
         // Clone your Git repository to Jenkins workspace
