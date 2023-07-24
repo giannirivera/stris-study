@@ -9,3 +9,6 @@ RUN apt-get update && apt-get install -y docker.io
 
 # Switch back to the Jenkins user
 USER jenkins
+
+# Define the Jenkins agent label
+LABEL jenkins-agent
