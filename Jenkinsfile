@@ -1,7 +1,9 @@
 pipeline {
   agent  {
     docker {
-            image 'node:14' // Use the Node.js Docker image with the desired version
+            // Specify the Docker image to use for the Jenkins agent
+            image 'custom-jenkins-agent:latest' // Replace with your custom image or use 'node:14' for a Node.js image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket for Docker-in-Docker support
         }
   }
 
