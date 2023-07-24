@@ -42,7 +42,7 @@ pipeline {
 
             // Build the Docker image
             script {
-                docker.build("docker.io/giannirivera/my-app:latest")
+                docker.build("docker.io/my-app:latest")
             }
     }
   }
