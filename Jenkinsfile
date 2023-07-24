@@ -37,13 +37,18 @@ pipeline {
 
     stage('Deploy') {
       steps {
-            // Clone your Git repository to Jenkins workspace
-            checkout scm
+        // Build the Docker image
+        script {
+          docker.build("docker.io/giannirivera/giannirivera/myapp:latest")
+        }
 
-            // Build the Docker image
-            script {
-                docker.build("docker.io/my-app:latest")
-            }
+        // Log in to Docker Hub
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                    sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+        }
+        // Push the Docker image to Docker Hub
+        sh 'docker push docker.io/giannirivera/giannirivera/myapp:latest'
+      }
     }
   }
 
